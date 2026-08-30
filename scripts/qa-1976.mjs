@@ -1,0 +1,13 @@
+import { chromium } from 'playwright';
+const browser = await chromium.launch({ args: ['--no-sandbox'] });
+const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+page.on('pageerror', e => console.log('PAGEERROR', e.message));
+page.on('console', m => { if (m.type()==='error') console.log('CONSOLE', m.text()); });
+await page.goto('http://127.0.0.1:8080/', { waitUntil: 'networkidle' });
+await page.getByRole('button', { name: /start walking/i }).click();
+await page.waitForTimeout(400);
+await page.getByRole('button', { name: /schoolyard classic/i }).click();
+await page.waitForTimeout(1800);
+await page.screenshot({ path: '/workspace/screenshots/play-1976-wallabee.png' });
+await browser.close();
+console.log('ok');
